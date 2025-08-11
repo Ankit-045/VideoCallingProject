@@ -17,13 +17,14 @@ const server = createServer(app);
 const io = connectToSocket(server);
 
 // Port config
-app.set("port", process.env.PORT || 8000);
+const PORT = process.env.PORT || 8000;
+app.set("port", PORT);
 
 // Security middleware
 app.use(helmet());
 app.disable("x-powered-by");
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000", // Change to your frontend URL in prod
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -42,14 +43,20 @@ app.use("/api/v1/users", userRoutes);
 // Start server
 const start = async () => {
   try {
-    const connectionsDb = await mongoose.connect(process.env.MONGO_URI, {
+    const mongoURI = process.env.MONGO_URI;
+
+    if (!mongoURI) {
+      throw new Error("MONGO_URI environment variable is not defined");
+    }
+
+    const connectionsDb = await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
     console.log(`✅ Connected to MongoDB: ${connectionsDb.connection.host}`);
 
-    server.listen(app.get("port"), () => {
-      console.log(`🚀 Server running on port ${app.get("port")}`);
+    server.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (error) {
     console.error("❌ MongoDB connection failed", error);
