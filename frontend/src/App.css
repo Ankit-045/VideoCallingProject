@@ -489,6 +489,7 @@
   text-align: center;
 
 }
+
 .meetContainer {
   display: flex;
   padding-inline: 20px;
@@ -497,13 +498,10 @@
   justify-content: center;
 }
 
-
-
 .leftPanel {
   height: 100%;
   display: flex;
   align-items: center;
-
 }
 
 .rightPanel {
@@ -515,5 +513,77 @@
   width: 30vw;
   height: auto;
   border-radius: 20px;
+}
+
+/* Home Page Styles */
+.homePageContainer {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.homePageContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.1;
+  z-index: 0;
+}
+
+.homeMainContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 3rem;
+  height: calc(100vh - 120px);
+  position: relative;
+  z-index: 5;
+}
+
+.meetingInputContainer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.meetingInput {
+  min-width: 300px;
+}
+
+.joinButton {
+  padding: 0.8rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+/* Responsive Design for Home Page */
+@media (max-width: 768px) {
+  .homeMainContainer {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+    gap: 2rem;
+  }
+  
+  .meetingInputContainer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .meetingInput {
+    min-width: auto;
+    width: 100%;
+  }
 }
 

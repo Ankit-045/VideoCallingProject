@@ -20,42 +20,45 @@ const io = connectToSocket(server);
 const PORT = process.env.PORT || 8000;
 app.set("port", PORT);
 
-// Security middleware
-app.use(helmet());
-app.disable("x-powered-by");
-
+// Allowed frontend origins
 const allowedOrigins = [
   "http://localhost:3000",
-  process.env.FRONTEND_URL 
+  process.env.FRONTEND_URL
 ];
 
+// CORS middleware
 app.use(cors({
   origin: function(origin, callback) {
-    
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true); // allow non-browser requests like Postman
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
     return callback(null, true);
   },
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
+
+// Enable preflight requests for all routes
+app.options("*", cors());
+
+app.use(helmet());
+app.disable("x-powered-by");
 
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100
 }));
 
-// Body parsing
+// Body parsing middleware
 app.use(express.json({ limit: "40kb" }));
 app.use(express.urlencoded({ limit: "40kb", extended: true }));
 
-// Routes
+// API routes
 app.use("/api/v1/users", userRoutes);
 
-// Start server
+// Start server and connect to MongoDB
 const start = async () => {
   try {
     const mongoURI = process.env.MONGO_URI;
@@ -80,4 +83,3 @@ const start = async () => {
 };
 
 start();
-// just random comment
